@@ -13,7 +13,7 @@ app = FastAPI()
 
 # -- Configuration --
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
-DATABASE_ID = os.environ.get("DATABASE_ID", "minuit-database")
+DATABASE_ID = os.environ.get("DATABASE_ID", "(default)")
 
 # Initialize Task Manager
 try:
