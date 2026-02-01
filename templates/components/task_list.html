@@ -1,0 +1,58 @@
+<section class="space-y-4">
+    {% for task in tasks %}
+    <div class="bg-gray-800 rounded-xl p-4 flex items-center justify-between border-l-4 transition-all shadow-md group relative"
+        style="border-left-color: hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%)">
+
+        <div class="flex-grow pr-4 min-w-0">
+            <h3 class="text-lg font-medium text-gray-100 truncate">{{ task.name }}</h3>
+            <div class="flex gap-2 text-[10px] text-gray-400 mt-1 items-center">
+                <span class="text-yellow-500">
+                    {% for i in range(task.difficulty) %}★{% endfor %}
+                </span>
+                <span>•</span>
+                <span>h={{ task.half_life }}d</span>
+                <span>•</span>
+                <span>p={{ "%.1f"|format(task.priority) }}%</span>
+                {% if task.is_recurrent %}<span class="text-yellow-500 font-semibold">↻</span>{% endif %}
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 flex-shrink-0">
+            <div class="text-2xl font-bold" style="color: hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%)">
+                {{ "%.0f"|format(task.priority) }}
+            </div>
+            <form action="/tasks/{{ task.id }}/done" method="post">
+                <button type="submit"
+                    class="bg-gray-700 hover:bg-emerald-600 text-gray-300 hover:text-white p-2 rounded-full transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+            </form>
+            <div class="relative">
+                <details class="group/menu">
+                    <summary
+                        class="bg-gray-700 hover:bg-gray-600 text-gray-300 p-2 rounded-full cursor-pointer list-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path
+                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                        </svg>
+                    </summary>
+                    <div
+                        class="absolute right-0 mt-2 w-32 bg-gray-700 rounded-lg shadow-xl py-2 z-10 border border-gray-600">
+                        <button type="button"
+                            onclick="openEditModal('{{ task.id }}', '{{ task.name|replace("'", "\\'") }}', '{{ task.half_life }}', '{{ task.difficulty }}')"
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-blue-400">Edit</button>
+                        <form action="/tasks/{{ task.id }}/delete" method="post" onsubmit="return confirm('Delete?');">
+                            <button type="submit"
+                                class="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-red-400">Delete</button>
+                        </form>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "components/task_form.html" %}
+{% include "components/graph.html" %}
+{% include "components/task_list.html" %}
+{% endblock %}
+
+{% block modals %}
+<div id="editModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-70 modal-backdrop" onclick="closeEditModal()"></div>
+    <div class="relative z-10 flex items-center justify-center h-full pointer-events-none">
+        <div
+            class="bg-gray-800 rounded-xl p-6 w-full max-w-md shadow-2xl border border-gray-700 pointer-events-auto mx-4">
+            <h3 class="text-xl font-bold mb-4 text-blue-400">Edit Task</h3>
+            <form id="editForm" method="post" class="flex flex-col gap-4">
+                <input type="text" id="editName" name="name" required
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
+                <input type="number" id="editHalfLife" name="half_life" step="0.5" required
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
+
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-400 uppercase mb-2">Difficulty</span>
+                    <div class="flex flex-row-reverse justify-end star-rating text-2xl">
+                        <input type="radio" id="e_star3" name="difficulty" value="3" class="hidden" /><label
+                            for="e_star3" class="cursor-pointer text-gray-600 px-1">★</label>
+                        <input type="radio" id="e_star2" name="difficulty" value="2" class="hidden" /><label
+                            for="e_star2" class="cursor-pointer text-gray-600 px-1">★</label>
+                        <input type="radio" id="e_star1" name="difficulty" value="1" class="hidden" /><label
+                            for="e_star1" class="cursor-pointer text-gray-600 px-1">★</label>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-gray-400">Cancel</button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openEditModal(id, name, halfLife, difficulty) {
+        document.getElementById('editName').value = name;
+        document.getElementById('editHalfLife').value = halfLife;
+        document.getElementById('editForm').action = `/tasks/${id}/update`;
+
+        const radio = document.querySelector(`#editModal input[value="${difficulty}"]`);
+        if (radio) radio.checked = true;
+
+        document.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+    function closeEditModal() { document.getElementById('editModal').classList.add('hidden'); }
+</script>
+{% endblock %}
