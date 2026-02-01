@@ -10,7 +10,7 @@
         <div class="flex-1 flex flex-col items-center gap-2 group h-full">
             <div class="flex-grow w-full flex flex-col justify-end">
                 <div class="w-full bg-blue-500 border border-blue-400/50 rounded-t-sm relative flex items-end justify-center hover:bg-blue-400 transition-all"
-                    style="height: {{ [percentage, 8] | max }}%;">
+                    style="height: {{ percentage }}%;">
                     <span
                         class="absolute -top-5 opacity-0 group-hover:opacity-100 text-[10px] font-bold text-blue-400 transition-opacity whitespace-nowrap">
                         {{ day.total }}{% if day.total >= graph_max %}+{% endif %}

@@ -5,7 +5,7 @@ from typing import Optional
 class Task(BaseModel):
     id: str
     name: str
-    half_life: float = 7.0
+    half_life: float = 1.0
     difficulty: int = 1
     is_recurrent: bool = False
     created_at: datetime
