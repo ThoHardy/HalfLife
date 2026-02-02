@@ -9,17 +9,19 @@
                 <span class="text-yellow-500">
                     {% for i in range(task.difficulty) %}★{% endfor %}
                 </span>
+                {% if task.hashtag %}
                 <span>•</span>
-                <span>h={{ task.half_life }}d</span>
-                <span>•</span>
-                <span>p={{ "%.1f"|format(task.priority) }}%</span>
-                {% if task.is_recurrent %}<span class="text-yellow-500 font-semibold">↻</span>{% endif %}
+                <span style="color: {{ get_hashtag_color(task.hashtag) }}; font-weight: 500;">{{ task.hashtag }}</span>
+                {% endif %}
             </div>
         </div>
 
         <div class="flex items-center gap-4 flex-shrink-0">
-            <div class="text-2xl font-bold" style="color: hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%)">
-                {{ "%.0f"|format(task.priority) }}
+            <div class="flex items-center gap-1">
+                {% if task.is_recurrent %}<span class="text-yellow-500 font-semibold text-lg">↻</span>{% endif %}
+                <div class="text-2xl font-bold" style="color: hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%)">
+                    {{ "%.0f"|format(task.priority) }}
+                </div>
             </div>
             <form action="/tasks/{{ task.id }}/done" method="post">
                 <button type="submit"
@@ -43,7 +45,7 @@
                     <div
                         class="absolute right-0 mt-2 w-32 bg-gray-700 rounded-lg shadow-xl py-2 z-10 border border-gray-600">
                         <button type="button"
-                            onclick="openEditModal('{{ task.id }}', '{{ task.name|replace("'", "\\'") }}', '{{ task.half_life }}', '{{ task.difficulty }}')"
+                            onclick="openEditModal('{{ task.id }}', '{{ task.name|replace("'", "\\'") }}', '{{ task.half_life }}', '{{ task.difficulty }}', '{{ task.is_recurrent|lower }}', '{{ task.hashtag|replace("'", "\\'") if task.hashtag else "" }}')"
                             class="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-blue-400">Edit</button>
                         <form action="/tasks/{{ task.id }}/delete" method="post" onsubmit="return confirm('Delete?');">
                             <button type="submit"

@@ -28,26 +28,30 @@ class TaskManagerCRUD:
                 difficulty=data.get('difficulty', 1),
                 is_recurrent=data.get('is_recurrent', False),
                 created_at=created_at if isinstance(created_at, datetime) else datetime.now(timezone.utc),
-                priority=p
+                priority=p,
+                hashtag=data.get('hashtag')
             ))
         
         tasks.sort(key=lambda x: x.priority, reverse=True)
         return tasks
 
-    def add_task(self, name: str, half_life: float, difficulty: int, is_recurrent: bool):
+    def add_task(self, name: str, half_life: float, difficulty: int, is_recurrent: bool, hashtag: Optional[str] = None):
         self.db.collection('tasks').add({
             'name': name,
             'half_life': half_life,
             'difficulty': difficulty,
             'is_recurrent': is_recurrent,
             'created_at': datetime.now(timezone.utc),
+            'hashtag': hashtag
         })
 
-    def update_task(self, task_id: str, name: str, half_life: float, difficulty: int):
+    def update_task(self, task_id: str, name: str, half_life: float, difficulty: int, is_recurrent: bool, hashtag: Optional[str] = None):
         self.db.collection('tasks').document(task_id).update({
             'name': name,
             'half_life': half_life,
-            'difficulty': difficulty
+            'difficulty': difficulty,
+            'is_recurrent': is_recurrent,
+            'hashtag': hashtag
         })
 
     def complete_task(self, task_id: str):

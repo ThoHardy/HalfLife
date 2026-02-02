@@ -10,6 +10,7 @@ class Task(BaseModel):
     is_recurrent: bool = False
     created_at: datetime
     priority: float = 0.0
+    hashtag: Optional[str] = None
 
 class DailyStat(BaseModel):
     date: str

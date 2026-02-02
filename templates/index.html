@@ -17,7 +17,17 @@
                 <input type="text" id="editName" name="name" required
                     class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
                 <input type="number" id="editHalfLife" name="half_life" step="0.5" required
-                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100">
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100"
+                    placeholder="Half-life">
+                <input type="text" id="editHashtag" name="hashtag"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-100"
+                    placeholder="Hashtag (#topic)">
+
+                <label class="flex items-center gap-2 cursor-pointer group">
+                    <input type="checkbox" id="editIsRecurrent" name="is_recurrent" value="true"
+                        class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-600 bg-gray-700">
+                    <span class="text-sm text-gray-400">Recurrent</span>
+                </label>
 
                 <div class="flex flex-col">
                     <span class="text-xs text-gray-400 uppercase mb-2">Difficulty</span>
@@ -43,9 +53,11 @@
 
 {% block scripts %}
 <script>
-    function openEditModal(id, name, halfLife, difficulty) {
+    function openEditModal(id, name, halfLife, difficulty, isRecurrent, hashtag) {
         document.getElementById('editName').value = name;
         document.getElementById('editHalfLife').value = halfLife;
+        document.getElementById('editHashtag').value = hashtag;
+        document.getElementById('editIsRecurrent').checked = (isRecurrent === 'true');
         document.getElementById('editForm').action = `/tasks/${id}/update`;
 
         const radio = document.querySelector(`#editModal input[value="${difficulty}"]`);

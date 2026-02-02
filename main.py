@@ -24,6 +24,16 @@ except Exception as e:
 
 templates = Jinja2Templates(directory="templates")
 
+def get_hashtag_color(hashtag: str) -> str:
+    if not hashtag:
+        return "transparent"
+    # Basic deterministic hash for color
+    h = sum(ord(c) for c in hashtag)
+    hue = (h * 137.5) % 360  # Golden angle approximation for distribution
+    return f"hsl({hue}, 70%, 60%)"
+
+templates.env.globals.update(get_hashtag_color=get_hashtag_color)
+
 # -- Routes --
 
 @app.get("/", response_class=HTMLResponse)
@@ -46,10 +56,14 @@ async def add_task(
     name: str = Form(...),
     half_life: float = Form(...),
     difficulty: int = Form(1),
-    is_recurrent: bool = Form(False)
+    is_recurrent: bool = Form(False),
+    hashtag: Optional[str] = Form(None)
 ):
     if tm:
-        tm.add_task(name, half_life, difficulty, is_recurrent)
+        hashtag_clean = hashtag.strip() if hashtag and hashtag.strip() else None
+        if hashtag_clean and not hashtag_clean.startswith("#"):
+            hashtag_clean = f"#{hashtag_clean}"
+        tm.add_task(name, half_life, difficulty, is_recurrent, hashtag_clean)
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 @app.post("/tasks/{task_id}/update")
@@ -57,10 +71,15 @@ async def update_task(
     task_id: str,
     name: str = Form(...),
     half_life: float = Form(...),
-    difficulty: int = Form(1)
+    difficulty: int = Form(1),
+    is_recurrent: bool = Form(False),
+    hashtag: Optional[str] = Form(None)
 ):
     if tm:
-        tm.update_task(task_id, name, half_life, difficulty)
+        hashtag_clean = hashtag.strip() if hashtag and hashtag.strip() else None
+        if hashtag_clean and not hashtag_clean.startswith("#"):
+            hashtag_clean = f"#{hashtag_clean}"
+        tm.update_task(task_id, name, half_life, difficulty, is_recurrent, hashtag_clean)
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 @app.post("/tasks/{task_id}/done")
