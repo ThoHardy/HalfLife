@@ -15,3 +15,9 @@ class Task(BaseModel):
 class DailyStat(BaseModel):
     date: str
     total: int
+
+class ShoppingItem(BaseModel):
+    id: str
+    name: str
+    checked: bool = False
+    checked_at: Optional[datetime] = None

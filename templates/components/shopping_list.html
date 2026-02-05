@@ -1,0 +1,68 @@
+<section class="mb-8">
+    <details class="bg-gray-800/80 rounded-xl border border-gray-700 overflow-hidden group">
+        <summary
+            class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-gray-700/50 transition-colors">
+            <div class="flex items-center gap-3">
+                <span class="text-blue-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </span>
+                <h3 class="text-lg font-medium text-gray-100">Shopping List</h3>
+                <span class="text-xs text-gray-500 bg-gray-900/50 px-2 py-0.5 rounded-full">{{ shopping_items|length }}
+                    items</span>
+            </div>
+            <span class="text-gray-500 group-open:rotate-180 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </span>
+        </summary>
+
+        <div class="p-4 pt-0 space-y-2 border-t border-gray-700/50">
+            <div class="space-y-1 mt-4">
+                {% for item in shopping_items %}
+                <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/30 transition-colors group/item">
+                    <form action="/shopping/{{ item.id }}/toggle" method="post" id="toggle-{{ item.id }}">
+                        <input type="hidden" name="checked" value="{{ 'false' if item.checked else 'true' }}">
+                        <button type="submit"
+                            class="w-6 h-6 rounded border-2 flex items-center justify-center transition-all 
+                            {{ 'bg-emerald-600 border-emerald-600' if item.checked else 'border-gray-600 hover:border-blue-500' }}">
+                            {% if item.checked %}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            {% endif %}
+                        </button>
+                    </form>
+                    <span
+                        class="text-sm transition-all {{ 'text-gray-500 line-through' if item.checked else 'text-gray-200' }}">
+                        {{ item.name }}
+                    </span>
+                </div>
+                {% endfor %}
+                {% if not shopping_items %}
+                <p class="text-xs text-gray-500 text-center py-4">No items in the list</p>
+                {% endif %}
+            </div>
+
+            <form action="/shopping" method="post" class="mt-4 flex gap-2">
+                <input type="text" name="name" placeholder="Add an item..." required
+                    class="flex-grow bg-gray-700/50 border border-gray-600 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 text-gray-200">
+                <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-1.5 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </details>
+</section>

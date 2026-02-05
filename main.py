@@ -40,15 +40,18 @@ templates.env.globals.update(get_hashtag_color=get_hashtag_color)
 async def read_root(request: Request):
     tasks = []
     stats = []
+    shopping_items = []
     
     if tm:
         tasks = tm.get_all_tasks()
         stats = tm.get_7_day_stats()
+        shopping_items = tm.get_shopping_items()
 
     return templates.TemplateResponse("index.html", {
         "request": request, 
         "tasks": tasks, 
-        "stats": stats
+        "stats": stats,
+        "shopping_items": shopping_items
     })
 
 @app.post("/tasks")
@@ -92,6 +95,18 @@ async def complete_task(task_id: str):
 async def delete_task(task_id: str):
     if tm:
         tm.delete_task(task_id)
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/shopping")
+async def add_shopping_item(name: str = Form(...)):
+    if tm:
+        tm.add_shopping_item(name)
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.post("/shopping/{item_id}/toggle")
+async def toggle_shopping_item(item_id: str, checked: bool = Form(...)):
+    if tm:
+        tm.toggle_shopping_item(item_id, checked)
     return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
 if __name__ == "__main__":

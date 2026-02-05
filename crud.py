@@ -1,7 +1,7 @@
 from google.cloud import firestore
 from datetime import datetime, timezone, timedelta
 from typing import List, Optional
-from models import Task, DailyStat
+from models import Task, DailyStat, ShoppingItem
 from logic import calculate_priority
 
 class TaskManagerCRUD:
@@ -92,3 +92,41 @@ class TaskManagerCRUD:
             total = doc.to_dict().get('total_stars', 0) if doc.exists else 0
             stats.append(DailyStat(date=day_str, total=total))
         return stats
+
+    def get_shopping_items(self) -> List[ShoppingItem]:
+        items = []
+        now = datetime.now(timezone.utc)
+        docs = self.db.collection('shopping_list').stream()
+        for doc in docs:
+            data = doc.to_dict()
+            checked = data.get('checked', False)
+            checked_at = data.get('checked_at')
+            
+            # Cleanup logic: delete if checked more than 24 hours ago
+            if checked and isinstance(checked_at, datetime):
+                if now - checked_at > timedelta(hours=24):
+                    self.db.collection('shopping_list').document(doc.id).delete()
+                    continue
+
+            items.append(ShoppingItem(
+                id=doc.id,
+                name=data.get('name', 'Unnamed Item'),
+                checked=checked,
+                checked_at=checked_at
+            ))
+        return items
+
+    def add_shopping_item(self, name: str):
+        self.db.collection('shopping_list').add({
+            'name': name,
+            'checked': False,
+            'checked_at': None
+        })
+
+    def toggle_shopping_item(self, item_id: str, checked: bool):
+        update_data = {'checked': checked}
+        if checked:
+            update_data['checked_at'] = datetime.now(timezone.utc)
+        else:
+            update_data['checked_at'] = None
+        self.db.collection('shopping_list').document(item_id).update(update_data)
