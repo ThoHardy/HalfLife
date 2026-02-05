@@ -1,9 +1,9 @@
 <section class="space-y-4">
     {% for task in tasks %}
-    <div class="glass rounded-2xl p-5 flex items-center justify-between transition-all group relative overflow-hidden"
+    <div class="glass rounded-2xl p-5 flex items-center justify-between transition-all group relative"
         style="border-left: 4px solid hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%);">
         <div
-            class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity">
+            class="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
         </div>
 
         <div class="flex-grow pr-4 min-w-0">
