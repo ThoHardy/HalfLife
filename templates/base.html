@@ -5,8 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Priority Engine + Energy{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        :root {
+            --bg-glass: rgba(17, 24, 39, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-image: url('https://stsci-opo.org/STScI-01GA6J2M0N8S0C15904DDF0M9H.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -36,14 +72,15 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-8 max-w-3xl">
-        <header class="mb-8 border-b border-gray-700 pb-4">
+<body class="text-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-12 max-w-3xl">
+        <header class="mb-12 text-center">
             <h1
-                class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+                class="text-5xl md:text-6xl font-bold font-outfit tracking-tight pb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200 drop-shadow-[0_0_15px_rgba(165,180,252,0.3)]">
                 Tout Doux List
             </h1>
-            <p class="text-xs md:text-sm text-gray-500 font-mono italic mt-1">Thomate's Energy Tracker</p>
+            <p class="text-xs md:text-sm text-gray-400 font-medium tracking-[0.2em] uppercase mt-2 opacity-60">System
+                Log: Thomate's Energy</p>
         </header>
 
         {% block content %}{% endblock %}
