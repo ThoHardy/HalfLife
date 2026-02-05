@@ -5,6 +5,7 @@ from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, Request, Form, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from crud import TaskManagerCRUD
@@ -23,6 +24,7 @@ except Exception as e:
     tm = None
 
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 def get_hashtag_color(hashtag: str) -> str:
     if not hashtag:
