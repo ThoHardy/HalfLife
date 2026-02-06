@@ -69,6 +69,10 @@
         .star-rating label:hover~label {
             color: #f59e0b;
         }
+
+        .task-card:has(details[open]) {
+            z-index: 40;
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
