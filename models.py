@@ -15,6 +15,7 @@ class Task(BaseModel):
 class DailyStat(BaseModel):
     date: str
     total: int
+    day_name: str
 
 class ShoppingItem(BaseModel):
     id: str

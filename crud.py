@@ -90,7 +90,8 @@ class TaskManagerCRUD:
             day_str = day.strftime('%Y-%m-%d')
             doc = self.db.collection('daily_stats').document(day_str).get()
             total = doc.to_dict().get('total_stars', 0) if doc.exists else 0
-            stats.append(DailyStat(date=day_str, total=total))
+            total = doc.to_dict().get('total_stars', 0) if doc.exists else 0
+            stats.append(DailyStat(date=day_str, total=total, day_name=day.strftime('%a')))
         return stats
 
     def get_shopping_items(self) -> List[ShoppingItem]:

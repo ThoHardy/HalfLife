@@ -1,63 +1,96 @@
-<section class="space-y-4">
-    {% for task in tasks %}
-    <div class="glass rounded-2xl p-5 flex items-center justify-between transition-all group relative task-card"
-        style="border-left: 4px solid hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%);">
-        <div
-            class="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-        </div>
-
-        <div class="flex-grow pr-4 min-w-0">
-            <h3 class="text-lg font-medium text-gray-100 truncate">{{ task.name }}</h3>
-            <div class="flex gap-2 text-[10px] text-gray-400 mt-1 items-center">
-                <span class="text-yellow-500">
-                    {% for i in range(task.difficulty) %}★{% endfor %}
-                </span>
-                {% if task.hashtag %}
-                <span>•</span>
-                <span style="color: {{ get_hashtag_color(task.hashtag) }}; font-weight: 500;">{{ task.hashtag }}</span>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="flex items-center gap-4 flex-shrink-0">
-            <div class="flex items-center gap-1">
-                {% if task.is_recurrent %}<span class="text-yellow-500 font-semibold text-lg">↻</span>{% endif %}
-                <div class="text-2xl font-bold" style="color: hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%)">
-                    {{ "%.0f"|format(task.priority) }}
-                </div>
-            </div>
-            <form action="/tasks/{{ task.id }}/done" method="post">
-                <button type="submit"
-                    class="bg-gray-700 hover:bg-emerald-600 text-gray-300 hover:text-white p-2 rounded-full transition-all">
+<section class="mb-10">
+    <details class="glass rounded-2xl overflow-hidden group border-none" open>
+        <summary
+            class="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-gray-700/50 transition-colors">
+            <div class="flex items-center gap-3">
+                <span class="text-emerald-400">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                </button>
-            </form>
-            <div class="relative">
-                <details class="group/menu">
-                    <summary
-                        class="bg-gray-700 hover:bg-gray-600 text-gray-300 p-2 rounded-full cursor-pointer list-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path
-                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                        </svg>
-                    </summary>
-                    <div
-                        class="absolute right-0 mt-2 w-32 bg-gray-700 rounded-lg shadow-xl py-2 z-10 border border-gray-600">
-                        <button type="button"
-                            onclick="openEditModal('{{ task.id }}', '{{ task.name|replace("'", "\\'") }}', '{{ task.half_life }}', '{{ task.difficulty }}', '{{ task.is_recurrent|lower }}', '{{ task.hashtag|replace("'", "\\'") if task.hashtag else "" }}')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-blue-400">Edit</button>
-                        <form action="/tasks/{{ task.id }}/delete" method="post" onsubmit="return confirm('Delete?');">
-                            <button type="submit"
-                                class="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-red-400">Delete</button>
-                        </form>
-                    </div>
-                </details>
+                </span>
+                <h3 class="text-lg font-medium text-gray-100">Tasks</h3>
+                <span class="text-xs text-gray-500 bg-gray-900/50 px-2 py-0.5 rounded-full">{{ tasks|length }}</span>
             </div>
+            <span class="text-gray-500 group-open:rotate-180 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </span>
+        </summary>
+
+        <div class="p-4 pt-0 space-y-4 border-t border-gray-700/50 mt-4">
+            {% for task in tasks %}
+            <div class="glass rounded-2xl p-5 flex items-center justify-between transition-all group relative task-card"
+                style="border-left: 4px solid hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%);">
+                <div
+                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                </div>
+
+                <div class="flex-grow pr-4 min-w-0">
+                    <h3 class="text-lg font-medium text-gray-100 truncate">{{ task.name }}</h3>
+                    <div class="flex gap-2 text-[10px] text-gray-400 mt-1 items-center">
+                        <span class="text-yellow-500">
+                            {% for i in range(task.difficulty) %}★{% endfor %}
+                        </span>
+                        {% if task.hashtag %}
+                        <span>•</span>
+                        <span style="color: {{ get_hashtag_color(task.hashtag) }}; font-weight: 500;">{{ task.hashtag
+                            }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <div class="flex items-center gap-1">
+                        {% if task.is_recurrent %}<span class="text-yellow-500 font-semibold text-lg">↻</span>{% endif
+                        %}
+                        <div class="text-2xl font-bold"
+                            style="color: hsl({{ 120 - task.priority * 1.2 | int }}, 70%, 50%)">
+                            {{ "%.0f"|format(task.priority) }}
+                        </div>
+                    </div>
+                    <form action="/tasks/{{ task.id }}/done" method="post">
+                        <button type="submit"
+                            class="bg-gray-700 hover:bg-emerald-600 text-gray-300 hover:text-white p-2 rounded-full transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    </form>
+                    <div class="relative">
+                        <details class="group/menu">
+                            <summary
+                                class="bg-gray-700 hover:bg-gray-600 text-gray-300 p-2 rounded-full cursor-pointer list-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path
+                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                </svg>
+                            </summary>
+                            <div
+                                class="absolute right-0 mt-2 w-32 bg-gray-700 rounded-lg shadow-xl py-2 z-10 border border-gray-600">
+                                <button type="button"
+                                    onclick="openEditModal('{{ task.id }}', '{{ task.name|replace("'", "\\'") }}', '{{ task.half_life }}', '{{ task.difficulty }}', '{{ task.is_recurrent|lower }}', '{{ task.hashtag|replace("'", "\\'") if task.hashtag else "" }}')"
+                                    class="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-blue-400">Edit</button>
+                                <form action="/tasks/{{ task.id }}/delete" method="post"
+                                    onsubmit="return confirm('Delete?');">
+                                    <button type="submit"
+                                        class="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 hover:text-red-400">Delete</button>
+                                </form>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not tasks %}
+            <p class="text-sm text-gray-500 text-center py-6">No pending tasks</p>
+            {% endif %}
         </div>
-    </div>
-    {% endfor %}
+    </details>
 </section>
